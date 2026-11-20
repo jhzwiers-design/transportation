@@ -169,6 +169,13 @@
     width: 100%; padding: 10px; font: inherit; color: #fff;
     background: var(--void); border: 2px solid var(--pink); border-radius: 10px;
   }
+
+  .modal select {
+    -webkit-appearance: none; appearance: none; padding-right: 44px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M2 2l8 8 8-8' fill='none' stroke='%23c13bff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; background-size: 20px 12px;
+  }
+  .modal select:focus { outline: 2px solid #c13bff; }
   .modal .go {
     width: 100%; margin-top: 20px; padding: 14px; font: 700 18px 'Space Mono', monospace;
     background: var(--slime); color: var(--void); border: none; border-radius: 12px; cursor: pointer;
@@ -315,6 +322,52 @@
   html.unflip { transform: rotate(0); transition: transform 1.2s cubic-bezier(.6,-0.4,.4,1.4); }
   .ufo { cursor: pointer; }
 
+
+  /* ---------- track your alien / flock db ---------- */
+  .track {
+    margin-top: 18px; padding: 10px 22px; font: 700 15px 'Space Mono', monospace; letter-spacing: 2px;
+    color: var(--cyan); background: transparent; border: 2px dashed var(--cyan); border-radius: 999px; cursor: pointer;
+  }
+  .track:hover { background: var(--cyan); color: var(--void); }
+  .db { position: fixed; inset: 0; z-index: 80; display: none; background: #000; color: var(--slime);
+    font-family: 'Space Mono', monospace; overflow-y: auto; }
+  .db.open { display: block; }
+  .db::after { content: ''; position: fixed; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgba(57,255,20,.05) 0 1px, transparent 1px 3px); }
+  .db header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
+    border-bottom: 2px solid var(--slime); background: #031a03; position: sticky; top: 0; z-index: 2; }
+  .db header b { font-family: 'Rubik Glitch', cursive; font-size: 22px; font-weight: 400; letter-spacing: 2px; }
+  .db header button { background: none; border: 2px solid var(--pink); color: var(--pink); font: 700 13px 'Space Mono', monospace;
+    padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+  .boot { padding: 20px 16px; font-size: 14px; white-space: pre-wrap; }
+  .boot .ok { color: #fff; background: var(--slime); color: #000; padding: 0 6px; }
+  .grid { display: none; grid-template-columns: 1.1fr 1fr; gap: 14px; padding: 14px 16px 30px; }
+  .grid.show { display: grid; }
+  .panel { border: 1px solid var(--slime); border-radius: 10px; padding: 12px; background: rgba(57,255,20,.04); }
+  .panel h3 { font-size: 12px; letter-spacing: 3px; color: var(--cyan); margin-bottom: 8px; font-weight: 700; }
+  #radar { width: 100%; aspect-ratio: 1; display: block; }
+  .coords { font-size: 12px; margin-top: 6px; color: #b6ffa8; }
+  .suspect { display: flex; gap: 12px; }
+  .mug { width: 110px; height: 135px; border: 2px solid var(--pink); border-radius: 8px; overflow: hidden; flex-shrink: 0; position: relative; }
+  .mug img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.2) sepia(1) hue-rotate(60deg) saturate(4); }
+  .mug span { position: absolute; bottom: 0; left: 0; right: 0; background: var(--pink); color: #fff; font-size: 10px; text-align: center; font-weight: 700; }
+  .facts { font-size: 12px; line-height: 1.7; }
+  .facts b { color: #fff; }
+  .wanted { color: var(--pink); animation: blink .6s infinite; }
+  .veh { margin-top: 10px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+  .veh img { width: 110px; filter: drop-shadow(0 0 8px var(--slime)); }
+  .log { grid-column: 1 / -1; }
+  .log table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .log th { text-align: left; color: var(--cyan); border-bottom: 1px solid var(--slime); padding: 4px; font-weight: 700; }
+  .log td { padding: 5px 4px; border-bottom: 1px dashed rgba(57,255,20,.3); vertical-align: top; }
+  .log tr.new td { animation: flash 1s; }
+  @keyframes flash { from { background: var(--slime); color: #000; } to { background: transparent; } }
+  .plate { background: #fff; color: #000; font-weight: 700; padding: 0 5px; border-radius: 3px; white-space: nowrap; }
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .log .hide-m { display: none; }
+  }
+
   footer {
     position: relative; z-index: 2; text-align: center; padding: 20px; font-size: 11px; color: #7a6aa8;
   }
@@ -383,6 +436,7 @@
   </div>
 
   <button class="book" id="bookBtn">BOOK RIDE</button>
+  <button class="track" id="trackBtn">📡 TRACK YOUR ALIEN</button>
   <p class="tagline">Your driver has 3 eyes, 0 traffic violations, and FTL travel. Get anywhere in the universe in under 4 minutes.*</p>
 </main>
 
@@ -431,6 +485,38 @@
     </div>
     <button class="send" id="rateSend">SUBMIT TO MOTHERSHIP 📡</button>
     <p class="result" id="rateResult"></p>
+  </div>
+</div>
+
+<div class="db" id="db">
+  <header><b>🐦 FLOCK GALACTIC DATABASE</b><button id="dbClose">EXIT ✕</button></header>
+  <div class="boot" id="boot"></div>
+  <div class="grid" id="dbGrid">
+    <div class="panel">
+      <h3>◉ LIVE ALIEN RADAR</h3>
+      <canvas id="radar" width="400" height="400"></canvas>
+      <p class="coords" id="coords">LAT —  LON —  ALT —</p>
+    </div>
+    <div class="panel">
+      <h3>◉ SUSPECT FILE #00420</h3>
+      <div class="suspect">
+        <div class="mug"><img id="mugImg" alt="Alien mugshot"><span>ALIEN #420</span></div>
+        <div class="facts">
+          NAME: <b id="dbName">Potatoooooo</b><br>
+          SPECIES: <b>Russian orphaned / unsure</b><br>
+          EYES: <b>2 (allegedly)</b><br>
+          HEIGHT: <b>3 ft + antennae</b><br>
+          KNOWN ASSOCIATES: <b>The Potato 🥔, a soft beaver 🦫</b><br>
+          WEAKNESS: <b>pretzels 🥨</b><br>
+          STATUS: <b class="wanted">⚠ SPEEDING AT MACH 40</b>
+        </div>
+      </div>
+      <div class="veh"><img id="vehImg" alt="Vehicle"><div>VEHICLE: <b>“Actual Space Ship”</b><br>PLATE: <span class="plate">UFO·👽·420</span><br>REG. DRIVER: <b>The Potato 🥔</b></div></div>
+    </div>
+    <div class="panel log">
+      <h3>◉ PLATE READER HITS (LIVE)</h3>
+      <table><thead><tr><th>TIME</th><th>CAMERA</th><th class="hide-m">PLATE</th><th>NOTES</th></tr></thead><tbody id="logBody"></tbody></table>
+    </div>
   </div>
 </div>
 
@@ -610,6 +696,81 @@
     }
   });
 
+
+  // ---------- track your alien (flock galactic database) ----------
+  let lastDriver = 'Zorp', dbTimers = [], radarRaf;
+  const db = document.getElementById('db'), boot = document.getElementById('boot'), dbGrid = document.getElementById('dbGrid');
+  const sightings = [
+    ['JaRan', 'Seen buying 400 pretzels. Paid in moon rocks.'],
+    ['New Orleans – Bourbon St Cam 7', 'Hovered over a parade. Caught 14 beads with antennae.'],
+    ['The Orphanage – Parking Lot', 'Dropped off a soft beaver. Did not explain.'],
+    ['Saturn’s Rings Tollbooth', 'Did not pay toll. Honked in Zorgonian.'],
+    ['Area 51 – Gate B', 'Waved at guards. Guards waved back nervously.'],
+    ['I-10 near Baton Rouge', 'Doing 9,000 mph. Passenger was The Potato.'],
+    ['JaRan (again)', 'Back for more pretzels. Cashier is concerned.'],
+    ['Walmart Supercenter, Mars', 'Stole 1 shopping cart. Returned it. Respect.'],
+    ['Lake Pontchartrain', 'Abducted a giraffe. Giraffe seemed fine with it.'],
+    ['Café Du Monde', 'Covered in powdered sugar. Tried to beam up the beignets.'],
+  ];
+  function stamp() { const d = new Date(); return d.toTimeString().slice(0, 8); }
+  function addHit() {
+    const [cam, note] = sightings[Math.floor(Math.random() * sightings.length)];
+    const tr = document.createElement('tr'); tr.className = 'new';
+    tr.innerHTML = `<td>${stamp()}</td><td>${cam}</td><td class="hide-m"><span class="plate">UFO·👽·420</span></td><td>${note}</td>`;
+    const body = document.getElementById('logBody'); body.prepend(tr);
+    while (body.children.length > 12) body.lastChild.remove();
+    beep(1500, .05);
+  }
+  function radar() {
+    const cv = document.getElementById('radar'), x = cv.getContext('2d'), R = 200;
+    let a = 0, bx = 60, by = -40, vx = 1.3, vy = .9;
+    (function frame() {
+      x.fillStyle = '#000'; x.fillRect(0, 0, 400, 400);
+      x.strokeStyle = 'rgba(57,255,20,.4)'; x.lineWidth = 1;
+      for (let r = 50; r <= 200; r += 50) { x.beginPath(); x.arc(R, R, r - 1, 0, 7); x.stroke(); }
+      x.beginPath(); x.moveTo(0, R); x.lineTo(400, R); x.moveTo(R, 0); x.lineTo(R, 400); x.stroke();
+      a += .04;
+      const g = x.createLinearGradient(R, R, R + Math.cos(a) * R, R + Math.sin(a) * R);
+      g.addColorStop(0, 'rgba(57,255,20,.9)'); g.addColorStop(1, 'rgba(57,255,20,0)');
+      for (let k = 0; k < 30; k++) {
+        const ang = a - k * .02;
+        x.strokeStyle = `rgba(57,255,20,${.7 * (1 - k / 30)})`; x.lineWidth = 3;
+        x.beginPath(); x.moveTo(R, R); x.lineTo(R + Math.cos(ang) * R, R + Math.sin(ang) * R); x.stroke();
+      }
+      bx += vx; by += vy;
+      if (Math.hypot(bx, by) > 160) { vx = -vx + (Math.random() - .5); vy = -vy + (Math.random() - .5); }
+      x.font = '26px serif'; x.textAlign = 'center'; x.fillText('👽', R + bx, R + by + 9);
+      x.fillStyle = '#ff2bd6'; x.font = '12px Space Mono, monospace'; x.fillText('POTATOOOOOO', R + bx, R + by - 18);
+      document.getElementById('coords').textContent =
+        `LAT ${(29.95 + by / 900).toFixed(4)}  LON ${(-90.07 + bx / 900).toFixed(4)}  ALT ${(42000 + Math.round(by * 37)).toLocaleString()} ft`;
+      radarRaf = requestAnimationFrame(frame);
+    })();
+  }
+  document.getElementById('trackBtn').onclick = () => {
+    db.classList.add('open'); dbGrid.classList.remove('show'); boot.style.display = 'block'; boot.innerHTML = '';
+    document.getElementById('logBody').innerHTML = '';
+    document.getElementById('mugImg').src = document.querySelector('.ufo image').getAttribute('href');
+    document.getElementById('vehImg').src = document.querySelector('.ship img').src;
+    const lines = [
+      '> CONNECTING TO FLOCK GALACTIC DATABASE...',
+      '> BYPASSING MOTHERSHIP FIREWALL... (jk we asked nicely)',
+      '> SCANNING 4,000,000 PLATE READERS ACROSS 47 GALAXIES...',
+      '> CROSS-REFERENCING PRETZEL PURCHASES...',
+      '> TARGET FOUND: POTATOOOOOO',
+      '<span class="ok"> ACCESS GRANTED </span>',
+    ];
+    lines.forEach((l, i) => dbTimers.push(setTimeout(() => { boot.innerHTML += l + '\n'; beep(700 + i * 120, .06); }, 300 + i * 450)));
+    dbTimers.push(setTimeout(() => {
+      boot.style.display = 'none'; dbGrid.classList.add('show'); chime();
+      radar(); for (let i = 0; i < 4; i++) addHit();
+      dbTimers.push(setInterval(addHit, 2200));
+    }, 300 + lines.length * 450 + 500));
+  };
+  document.getElementById('dbClose').onclick = () => {
+    db.classList.remove('open'); dbTimers.forEach(t => { clearTimeout(t); clearInterval(t); }); dbTimers = [];
+    cancelAnimationFrame(radarRaf);
+  };
+
   // ---------- booking ----------
   const modal = document.getElementById('modal');
   const status = document.getElementById('status');
@@ -638,7 +799,7 @@
     for (let i = 0; i < n; i++) {
       const p = document.createElement('div');
       p.className = 'pretzel-rain';
-      p.textContent = ['🥨','🥨','🥔','🦒'][Math.floor(Math.random()*4)];
+      p.textContent = '🥨';
       p.style.left = Math.random() * 100 + 'vw';
       p.style.fontSize = (24 + Math.random() * 40) + 'px';
       p.style.animationDuration = (1.8 + Math.random() * 2.5) + 's';
@@ -660,7 +821,7 @@
     scanSteps.forEach((m, i) => setTimeout(() => { scanText.textContent = m; beep(1000 + i * 200); setTimeout(() => beep(1000 + i * 200), 140); }, 400 + i * 900));
     setTimeout(() => {
       scanBox.classList.add('done');
-      scanText.innerHTML = '✅ PASSENGER VERIFIED<br>STATUS: VIP 🥨🦒🥔';
+      scanText.innerHTML = '✅ PASSENGER VERIFIED<br>STATUS: VIP 🥨';
       chime();
       rainPretzels(25);
     }, 4200);
@@ -669,6 +830,7 @@
 
   const noticeBg = document.getElementById('noticeBg');
   function launch(driver, to, flyId, label) {
+    lastDriver = driver.replace(/\s*🥔/, '') ;
     status.innerHTML = `✅ ${label} is on the way!<br><b>${driver}</b> is ${Math.ceil(Math.random()*8)+1} light-years away.<br>Heading to: ${to}. ★${(4 + Math.random()).toFixed(2)}`;
     speed = 25; document.body.classList.add('shake');
     if (flyId === 'shipfly') rocket(); else woo(1.8);
