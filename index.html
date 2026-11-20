@@ -386,24 +386,6 @@
   }
   .cancel.loose { position: fixed; width: auto; z-index: 90; padding: 10px 18px; background: var(--void); white-space: nowrap; }
 
-  /* ---------- earth mode ---------- */
-  .earthbtn {
-    font: 700 12px 'Space Mono', monospace; letter-spacing: 1px; padding: 6px 12px; cursor: pointer;
-    background: transparent; color: var(--slime); border: 2px solid var(--slime); border-radius: 999px;
-  }
-  body.earth { background: #e9e0cc !important; color: #555 !important; cursor: default; }
-  body.earth * { animation-play-state: paused !important; font-family: 'Times New Roman', serif !important;
-    text-shadow: none !important; box-shadow: none !important; }
-  body.earth #stars, body.earth .float, body.earth .beam, body.earth .ticker { visibility: hidden; }
-  body.earth h1, body.earth .logo { background: none !important; color: #8a8170 !important; -webkit-text-fill-color: #8a8170; }
-  body.earth .book, body.earth .track, body.earth .hotline, body.earth .earthbtn {
-    background: #d8ceb8 !important; color: #6d6555 !important; border-color: #b8ad95 !important; }
-  body.earth .ufo, body.earth .car, body.earth .cow { filter: grayscale(1) sepia(.5) !important; }
-  body.earth .with, body.earth .sub, body.earth .tagline, body.earth nav a, body.earth footer { color: #8a8170 !important; }
-  .earthmsg { position: fixed; z-index: 95; left: 50%; top: 18vh; transform: translateX(-50%); display: none;
-    width: min(420px, 88vw); padding: 18px; background: #f4efe3; color: #555; border: 1px solid #b8ad95;
-    font: 16px 'Times New Roman', serif; text-align: center; }
-  body.earth .earthmsg { display: block; }
   body.glitch { animation: glitch .9s steps(2) !important; }
   @keyframes glitch {
     0%   { filter: invert(1) hue-rotate(90deg); transform: translate(-10px, 4px) skew(10deg); }
@@ -452,6 +434,76 @@
   .call .hang { width: 72px; height: 72px; border-radius: 50%; border: none; background: #ff3b3b; font-size: 30px; cursor: pointer;
     box-shadow: 0 0 30px #ff3b3b; }
 
+
+  /* ---------- big UFO fly-in on page load ---------- */
+  body.intro .hero { z-index: 10; }
+  body.intro .ufo-zone { animation: arrive 2.8s cubic-bezier(.45,.05,.3,1) both; z-index: 20; }
+  body.intro .beam, body.intro .cow { opacity: 0 !important; animation: none; }
+  @keyframes arrive {
+    0%   { transform: translate(-55vw, -55vh) scale(.04) rotate(-50deg); filter: drop-shadow(0 0 0 transparent) blur(2px); }
+    18%  { transform: translate(38vw, -42vh) scale(.25) rotate(35deg); }
+    36%  { transform: translate(-34vw, -18vh) scale(.55) rotate(-30deg); filter: drop-shadow(-60px 20px 30px var(--slime)); }
+    58%  { transform: translate(18vw, 12vh) scale(2.6) rotate(18deg); filter: drop-shadow(80px -10px 40px var(--pink)) blur(1px); }
+    74%  { transform: translate(-6vw, -8vh) scale(.75) rotate(-10deg); filter: drop-shadow(-30px 0 20px var(--cyan)); }
+    86%  { transform: translate(0, 26px) scale(1.12, .9) rotate(3deg); }
+    93%  { transform: translate(0, -8px) scale(.96, 1.05) rotate(-1deg); }
+    100% { transform: none; filter: none; }
+  }
+  body.intro h1, body.intro .with, body.intro .sub, body.intro .book, body.intro .track,
+  body.intro .hotline, body.intro .hrbtn, body.intro .tagline { opacity: 0; }
+  body.landed h1 { animation: rainbow 4s linear infinite, slam .55s cubic-bezier(.2,1.8,.4,1) both; }
+  body.landed .with { animation: slam2 .5s .15s cubic-bezier(.2,1.8,.4,1) both; }
+  body.landed .sub { animation: blink 1s infinite, fadeup .4s both; }
+  body.landed .book { animation: pulse 1.4s infinite, fadeup .5s .25s both; }
+  body.landed .track, body.landed .hotline, body.landed .hrbtn, body.landed .tagline { animation: fadeup .5s .4s both; }
+  body.landed .hotline { animation: ring 2s 1s infinite, fadeup .5s .4s both; }
+  @keyframes slam { 0% { transform: scale(5) rotate(-20deg); opacity: 0; } 100% { transform: rotate(-3deg); opacity: 1; } }
+  @keyframes slam2 { 0% { transform: scale(3) rotate(20deg); opacity: 0; } 100% { transform: rotate(2deg); opacity: 1; } }
+  @keyframes fadeup { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .landflash { position: fixed; inset: 0; z-index: 99; pointer-events: none; background: var(--slime);
+    animation: landflash .7s ease-out forwards; mix-blend-mode: screen; }
+  @keyframes landflash { 0% { opacity: .9; } 30% { opacity: .4; background: var(--pink); } 100% { opacity: 0; } }
+  .shock { position: fixed; z-index: 98; pointer-events: none; width: 40px; height: 40px; margin: -20px 0 0 -20px;
+    border: 6px solid var(--slime); border-radius: 50%; animation: shock .8s ease-out forwards; }
+  @keyframes shock { to { transform: scale(40); opacity: 0; border-width: 1px; } }
+
+
+  /* ---------- enhance + send backup ---------- */
+  .radarbox { position: relative; overflow: hidden; border-radius: 6px; }
+  #radar { transition: transform .45s cubic-bezier(.3,1.4,.5,1); }
+  .enh-ui { position: absolute; inset: 0; pointer-events: none; display: none; }
+  .enh-ui.on { display: block; }
+  .enh-box { position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; transform: translate(-50%,-50%);
+    border: 3px solid var(--pink); box-shadow: 0 0 20px var(--pink); animation: blink .3s infinite; }
+  .enh-label { position: absolute; top: 8px; left: 8px; background: var(--pink); color: #fff; font-weight: 700; font-size: 13px; padding: 2px 8px; }
+  .enh-result { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center;
+    background: #000; gap: 10px; text-align: center; padding: 10px; }
+  .enh-result.on { display: flex; }
+  .enh-result canvas { width: 70%; image-rendering: pixelated; image-rendering: crisp-edges; border: 3px solid var(--slime);
+    animation: wobble 1s ease-in-out infinite alternate; }
+  @keyframes wobble { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+  .enh-result p { color: #fff; font-size: 13px; }
+  .enh-result b { color: var(--slime); font-size: 16px; }
+  .radar-btns { display: flex; gap: 8px; margin-top: 10px; }
+  .radar-btns button { flex: 1; padding: 10px 6px; font: 700 13px 'Space Mono', monospace; letter-spacing: 1px; cursor: pointer;
+    background: transparent; border: 2px solid var(--slime); color: var(--slime); border-radius: 8px; }
+  .radar-btns button:hover { background: var(--slime); color: #000; }
+  .radar-btns button:disabled { opacity: .4; cursor: wait; }
+  .bird { position: fixed; z-index: 95; pointer-events: none; left: -60px; animation: flyby-bird linear forwards; }
+  .bird span { display: inline-block; transform: scaleX(-1); animation: flap .18s infinite alternate; }
+  @keyframes flyby-bird { to { left: 110vw; } }
+  @keyframes flap { from { transform: scaleX(-1) translateY(0) rotate(-8deg); } to { transform: scaleX(-1) translateY(-10px) rotate(8deg); } }
+  .backup-msg { position: fixed; z-index: 96; left: 50%; top: 40%; transform: translate(-50%,-50%) scale(0);
+    background: var(--slime); color: #000; font: 700 20px 'Space Mono', monospace; text-align: center;
+    padding: 18px 26px; border: 4px solid #fff; border-radius: 14px; box-shadow: 0 0 40px var(--slime);
+    animation: pop .4s cubic-bezier(.2,1.8,.4,1) forwards; width: min(420px, 86vw); }
+  @keyframes pop { to { transform: translate(-50%,-50%) scale(1); } }
+
+
+  /* potatoes in upside-down mode travel "up" the page so they look like they fall down on the flipped screen */
+  .pretzel-rain.up { top: auto; bottom: -70px; animation-name: rise; }
+  @keyframes rise { to { transform: translateY(-120vh) rotate(-720deg); } }
+
   footer {
     position: relative; z-index: 2; text-align: center; padding: 20px; font-size: 11px; color: #7a6aa8;
   }
@@ -459,8 +511,7 @@
   @media (max-width: 640px) { nav ul { display: none; } }
 </style>
 </head>
-<body>
-<div class="earthmsg" id="earthMsg">Welcome to Earth Mode.<br>Rides are $45. Drivers have 2 eyes.<br>Nothing flies. Please enjoy the beige.</div>
+<body class="intro">
 <canvas id="stars"></canvas>
 
 <div class="ticker"><span>
@@ -474,7 +525,6 @@
     <li><a href="#">Drive (tentacles req.)</a></li>
     <li><a href="#">Area 51</a></li>
   </ul>
-  <button class="earthbtn" id="earthBtn">🌍 EARTH MODE</button>
 </nav>
 
 <main class="hero">
@@ -582,8 +632,20 @@
   <div class="grid" id="dbGrid">
     <div class="panel">
       <h3>◉ LIVE ALIEN RADAR</h3>
-      <canvas id="radar" width="400" height="400"></canvas>
+      <div class="radarbox">
+        <canvas id="radar" width="400" height="400"></canvas>
+        <div class="enh-ui" id="enhUi"><div class="enh-box"></div><span class="enh-label" id="enhLabel">ENHANCE 2x</span></div>
+        <div class="enh-result" id="enhResult">
+          <canvas id="potatoPix" width="12" height="12"></canvas>
+          <b>TARGET IDENTIFIED: POTATO</b>
+          <p>confidence: 98.2% 🥔<br>image quality: also potato</p>
+        </div>
+      </div>
       <p class="coords" id="coords">LAT —  LON —  ALT —</p>
+      <div class="radar-btns">
+        <button id="enhBtn">🔍 ENHANCE</button>
+        <button id="backupBtn">🐦 SEND BACKUP</button>
+      </div>
     </div>
     <div class="panel">
       <h3>◉ SUSPECT FILE #00420</h3>
@@ -730,6 +792,23 @@
   }
   draw();
 
+  // ---------- page-load UFO fly-in ----------
+  (() => {
+    speed = 45;                                   // warp-speed stars during the fly-in
+    const slow = setInterval(() => { speed = Math.max(2, speed * .93); }, 60);
+    setTimeout(() => {
+      clearInterval(slow); speed = 2;
+      document.body.classList.remove('intro'); document.body.classList.add('landed', 'shake');
+      const f = document.createElement('div'); f.className = 'landflash'; document.body.appendChild(f);
+      const r = document.querySelector('.ufo').getBoundingClientRect();
+      const w = document.createElement('div'); w.className = 'shock';
+      w.style.left = (r.left + r.width / 2) + 'px'; w.style.top = (r.top + r.height * .8) + 'px';
+      document.body.appendChild(w);
+      try { rocket(.8); } catch (_) {}            // plays only if the browser allows sound before a tap
+      setTimeout(() => { f.remove(); w.remove(); document.body.classList.remove('shake'); }, 1300);
+    }, 2800);
+  })();
+
   // ---------- floating space junk ----------
   const junk = ['👽','🛸','🥨','🦒','🥔','🦫','🥨','🦒','🥔','🪐','🛰️','👾','🥔','🦒'];
   for (let i = 0; i < junk.length; i++) {
@@ -826,6 +905,10 @@
   };
 
   // ---------- secret: tap the UFO 5 times ----------
+  function glitchNow() {
+    document.body.classList.remove('glitch'); void document.body.offsetWidth; document.body.classList.add('glitch');
+    speed = 30; setTimeout(() => { document.body.classList.remove('glitch'); speed = 2; }, 900);
+  }
   let taps = 0, tapTimer, secret = false, potatoLoop;
   document.querySelector('.ufo').addEventListener('click', () => {
     taps++; beep(400 + taps * 150, .07);
@@ -834,17 +917,17 @@
     taps = 0; secret = !secret;
     const h = document.documentElement;
     if (secret) {
-      h.classList.remove('unflip'); h.classList.add('flipped'); woo(2); rocket(1.2);
+      glitchNow(); h.classList.remove('unflip'); h.classList.add('flipped'); woo(2); rocket(1.2);
       potatoLoop = setInterval(() => {
         const p = document.createElement('div');
-        p.className = 'pretzel-rain'; p.textContent = '🥔';
+        p.className = 'pretzel-rain up'; p.textContent = '🥔';
         p.style.left = Math.random() * 100 + 'vw';
         p.style.fontSize = (24 + Math.random() * 50) + 'px';
         p.style.animationDuration = (1.5 + Math.random() * 2) + 's';
         document.body.appendChild(p); setTimeout(() => p.remove(), 4000);
       }, 90);
     } else {
-      h.classList.remove('flipped'); h.classList.add('unflip'); clearInterval(potatoLoop); woo(1);
+      glitchNow(); h.classList.remove('flipped'); h.classList.add('unflip'); clearInterval(potatoLoop); woo(1);
     }
   });
 
@@ -889,8 +972,9 @@
         x.strokeStyle = `rgba(57,255,20,${.7 * (1 - k / 30)})`; x.lineWidth = 3;
         x.beginPath(); x.moveTo(R, R); x.lineTo(R + Math.cos(ang) * R, R + Math.sin(ang) * R); x.stroke();
       }
-      bx += vx; by += vy;
+      if (!window.radarFrozen) { bx += vx; by += vy; }
       if (Math.hypot(bx, by) > 160) { vx = -vx + (Math.random() - .5); vy = -vy + (Math.random() - .5); }
+      window.blip = { x: R + bx, y: R + by };
       x.font = '26px serif'; x.textAlign = 'center'; x.fillText('👽', R + bx, R + by + 9);
       x.fillStyle = '#ff2bd6'; x.font = '12px Space Mono, monospace'; x.fillText('POTATOOOOOO', R + bx, R + by - 18);
       document.getElementById('coords').textContent =
@@ -926,7 +1010,7 @@
 
   // ---------- alien hotline ----------
   (() => {
-    const msg = '🛸 Just touched down. Need transport with the fastest alien in the galaxy. Will pay in pretzels 🥨';
+    const msg = '🛸 Just touched down. Need transport with the fastest alien in the galaxy.';
     const ios = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
     const link = document.getElementById('hotline');
     link.href = 'sms:+16015594650' + (ios ? '&' : '?') + 'body=' + encodeURIComponent(msg);
@@ -970,17 +1054,6 @@
     });
   })();
 
-  // ---------- earth mode ----------
-  document.getElementById('earthBtn').onclick = e => {
-    e.stopPropagation();
-    if (document.body.classList.contains('earth')) return;
-    document.body.classList.add('earth'); speed = 0;
-    setTimeout(() => {
-      document.body.classList.remove('earth'); document.body.classList.add('glitch');
-      speed = 30; try { rocket(.9); woo(.9); } catch (_) {}
-      setTimeout(() => { document.body.classList.remove('glitch'); speed = 2; }, 900);
-    }, 3000);
-  };
 
 
   // ---------- american heritage ----------
@@ -1044,6 +1117,59 @@
       ts.forEach(t => { clearTimeout(t); clearInterval(t); }); ts = [];
     };
   })();
+
+
+  // ---------- enhance ----------
+  (() => {
+    const btn = document.getElementById('enhBtn'), cv = document.getElementById('radar');
+    const ui = document.getElementById('enhUi'), label = document.getElementById('enhLabel'), res = document.getElementById('enhResult');
+    // draw a tiny potato and blow it up = super pixelated
+    const pc = document.getElementById('potatoPix').getContext('2d');
+    pc.fillStyle = '#000'; pc.fillRect(0, 0, 12, 12);
+    pc.font = '11px serif'; pc.textAlign = 'center'; pc.textBaseline = 'middle'; pc.fillText('🥔', 6, 7);
+    btn.onclick = () => {
+      btn.disabled = true; res.classList.remove('on'); ui.classList.add('on'); window.radarFrozen = true;
+      const b = window.blip || { x: 200, y: 200 };
+      cv.style.transformOrigin = `${b.x / 4}% ${b.y / 4}%`;
+      const zooms = [2, 4, 16, 64, 256];
+      zooms.forEach((z, i) => setTimeout(() => {
+        label.textContent = `ENHANCE ${z}x`;
+        cv.style.transform = `scale(${[2, 3.5, 6, 10, 16][i]})`;
+        beep(500 + i * 220, .12); setTimeout(() => beep(500 + i * 220, .12), 150);
+      }, i * 800));
+      setTimeout(() => {
+        ui.classList.remove('on'); res.classList.add('on'); cv.style.transform = '';
+        chime();
+      }, zooms.length * 800 + 200);
+      setTimeout(() => { res.classList.remove('on'); btn.disabled = false; window.radarFrozen = false; }, zooms.length * 800 + 5200);
+    };
+  })();
+
+  // ---------- send backup ----------
+  document.getElementById('backupBtn').onclick = function () {
+    this.disabled = true;
+    for (let i = 0; i < 40; i++) {
+      const d = document.createElement('div'); d.className = 'bird';
+      d.innerHTML = '<span>🐦</span>';
+      d.style.top = (5 + Math.random() * 85) + 'vh';
+      d.style.fontSize = (22 + Math.random() * 40) + 'px';
+      d.style.animationDuration = (1.6 + Math.random() * 2) + 's';
+      d.style.animationDelay = (Math.random() * 1.5) + 's';
+      document.body.appendChild(d); setTimeout(() => d.remove(), 5500);
+    }
+    for (let i = 0; i < 10; i++) setTimeout(() => {              // chirps
+      try { const a = ac(), t = a.currentTime, o = a.createOscillator(), g = a.createGain();
+        o.frequency.setValueAtTime(2200 + Math.random() * 1500, t); o.frequency.exponentialRampToValueAtTime(4200, t + .08);
+        g.gain.setValueAtTime(.07, t); g.gain.exponentialRampToValueAtTime(.001, t + .1);
+        o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .1); } catch (_) {}
+    }, i * 140 + Math.random() * 80);
+    setTimeout(() => {
+      const m = document.createElement('div'); m.className = 'backup-msg';
+      m.innerHTML = '🐦 BACKUP HAS ARRIVED.<br>BACKUP IS BIRDS. 🐦';
+      document.body.appendChild(m); chime();
+      setTimeout(() => { m.remove(); this.disabled = false; }, 3200);
+    }, 1800);
+  };
 
   // ---------- booking ----------
   const modal = document.getElementById('modal');
